@@ -1,0 +1,71 @@
+download hive from apache site in home directory
+wget http://archive.apache.org/dist/hive/hive-1.2.1/apache-hive-1.2.1-bin.tar.gz
+tar -xvzf apache-hive-1.2.1-bin.tar.gz 
+ls
+apache-hive-1.2.1-bin
+mv apache-hive.1.2.1-bin  hive
+sudo mv hive /usr/local/
+sudo chown  -R hduser:hadoop  /usr/local/hive
+
+nano  ~/.bashrc
+export HIVE_HOME=/usr/local/hive
+export PATH=$PATH:$HIVE_HOME/bin
+export PATH=$PATH:$HIVE_HOME/bin
+source ~/.bashrc
+
+hadoop fs -mkdir  -p /tmp/hive
+hadoop fs -mkdir  -p  /user/hive/warehouse
+hadoop fs -chmod g+w /tmp/hive
+hadoop fs -chmod g+w /user/hive/warehouse
+sudo mkdir /usr/local/hive/iotmp
+ sudo chown  -R hduser:hadoop /usr/local/hive/iotmp
+sudo chmod 777 /usr/local/hive/iotmp
+hadoop fs -chmod 777 /tmp/hive
+
+
+
+Configuration files for Hive are under
+/usr/local/hive/conf
+
+hive-default.xml.template contains the default values for various configuration variables that come prepackaged in a Hive distribution. In order to override any of the values, create hive-site.xml instead and set the value in that file as shown above.
+hive-default.xml.template is located in the conf directory in your installation root, and hive-site.xml should also be created in the same directory.
+
+cd /usr/local/hive/conf
+cp hive-default.xml.template hive-site.xml
+gedit hive-site.xml or nano hive-site.xml
+
+do not append. make changes in the values in hive-site.xml
+
+<property>
+    <name>hive.exec.scratchdir</name>
+    <value>/tmp/hive</value>
+    <description>HDFS root scratch dir for Hive jobs which gets created with write all (733) permission. For each connecting user, an HDFS scratch dir: ${hive.exec.scratchdir}/&lt;username&gt; is created, with ${hive.scratch.dir.permission}.</description>
+  </property>
+  <property>
+    <name>hive.exec.local.scratchdir</name>
+    <value>/usr/local/hive/iotmp</value>
+    <description>Local scratch space for Hive jobs</description>
+  </property>
+  <property>
+    <name>hive.downloaded.resources.dir</name>
+    <value>/usr/local/hive/iotmp</value>
+    <description>Temporary local directory for added resources in the remote file system.</description>
+  </property>
+<property>
+   <name>hive.querylog.location</name>
+    <value>/usr/local/hive/iotmp</value>
+    <description>Location of Hive run time structured log file</description>
+ </property>
+
+Hive meta store settings in hive-site.xml
+<property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:derby:;databaseName=/usr/local/hive/metastore_db;create=true</value>
+    <description>JDBC connect string for a JDBC metastore</description>
+  </property>
+make changes by adding the below command in  hive-env.sh 
+if the file is not available then copy file from default file
+cp  hive-env.sh.template  hive-env.sh
+export HADOOP_USER_CLASSPATH_FIRST=true
+$ hive
+hive>
