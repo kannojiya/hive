@@ -1,0 +1,27 @@
+>start hadoop services
+>hive
+>create database retail;
+>show databases;
+>use database;
+****set properties****
+1)set hive.cli.print.current.db=true;
+2)set hive.cli.print.header=true;
+3)set hive.default.fileformat=textfile;
+last command will open current directory 
+>create  table table_name(data int,data bigint);
+ row format delimited
+ fields terminated by ','
+ stored as textfile;
+***for map query****
+>create  table table_name(data int,data bigint);
+ row format delimited
+ fields terminated by ','
+ collection items terminated by '$'
+ mapkeys terminated by '3';
+>desc extended table_name;
+***there are 2 ways to load the data from local file sys to hive and second one is HDFS to hive
+1)load data local inpath 'filename.txt' overwrite into table table_name;
+
+2)load data inpath 'full path of file with filename.txt'/usr/local/hadoop/sbin/filename.txt; into table table_name;
+
+>drop commands:drop table table_name;  
